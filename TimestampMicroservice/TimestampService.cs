@@ -1,9 +1,9 @@
 ﻿namespace TimestampMicroservice
 {
-    public record SuccessfulTimestampResponse(ulong unix, string utc);
-    public record InvalidTimestampResponse(string error);
+    public sealed record SuccessfulTimestampResponse(ulong unix, string utc);
+    public sealed record InvalidTimestampResponse(string error);
 
-    public class TimestampService
+    public sealed class TimestampService
     {
         public TimestampService(ITimeProvider timeProvider)
         {
