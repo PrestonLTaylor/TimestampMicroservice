@@ -4,8 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-TimestampEndpoint.DefineServices(builder.Services);
+builder.Services.AddTimestampServices();
 
 var app = builder.Build();
 
@@ -17,6 +16,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-TimestampEndpoint.DefineEndpoints(app);
+app.MapTimestampService();
 
 app.Run();
