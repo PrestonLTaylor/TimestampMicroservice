@@ -11,7 +11,7 @@ builder.Services.AddResponseLogging();
 
 builder.Host.UseSerilog((context, config) =>
 {
-    config.WriteTo.Console();
+    config.ReadFrom.Configuration(builder.Configuration);
 });
 
 var app = builder.Build();
@@ -24,6 +24,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseSerilogRequestLogging();
 app.UseResponseLogging();
 
 app.MapTimestampService();
