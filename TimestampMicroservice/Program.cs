@@ -30,3 +30,5 @@ app.UseResponseLogging();
 app.MapTimestampService();
 
 app.Run();
+
+public partial class Program { }

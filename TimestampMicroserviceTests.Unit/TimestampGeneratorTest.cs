@@ -36,7 +36,7 @@ namespace TimestampMicroserviceTests
         [Test]
         public void TryGenerateTimestampFromString_ReturnsAUtcTimestampWithAValidFormat_WhenSuppliedAUnixTimestamp()
         {
-            ulong unixTimestamp = GetUnixTimestampFromDate(new DateTime(2015, 12, 25));
+            ulong unixTimestamp = TimestampGenerator.GetUnixTimestampFromDate(new DateTime(2015, 12, 25));
 
             generator.TryGenerateTimestampFromString(unixTimestamp.ToString(), out Timestamp? timestamp);
 
@@ -74,7 +74,7 @@ namespace TimestampMicroserviceTests
         public void TryGenerateTimestampFromString_ReturnsTheSameTimeAsSuppliedUnixTimestamp()
         {
             DateTime dateTime = new(2015, 12, 25);
-            ulong unixTimestamp = GetUnixTimestampFromDate(dateTime);
+            ulong unixTimestamp = TimestampGenerator.GetUnixTimestampFromDate(dateTime);
 
             generator.TryGenerateTimestampFromString(unixTimestamp.ToString(), out Timestamp? timestamp);
 
@@ -98,7 +98,7 @@ namespace TimestampMicroserviceTests
 
             Assert.Multiple(() =>
             {
-                Assert.That(timestamp.unix, Is.EqualTo(GetUnixTimestampFromDate(dateTime)));
+                Assert.That(timestamp.unix, Is.EqualTo(TimestampGenerator.GetUnixTimestampFromDate(dateTime)));
 
                 TryParseDateStringUsingExpectedFormat(timestamp.utc, out DateTime utcDateTime);
                 Assert.That(utcDateTime, Is.EqualTo(dateTime));
@@ -116,11 +116,6 @@ namespace TimestampMicroserviceTests
             const string expectedUtcTimeFormat = "ddd, dd MMM yyyy HH:mm:ss G\\MT";
             return DateTime.TryParseExact(dateString, expectedUtcTimeFormat, System.Globalization.CultureInfo.InvariantCulture,
                 System.Globalization.DateTimeStyles.None, out dateTime);
-        }
-
-        private ulong GetUnixTimestampFromDate(DateTime dateTime)
-        {
-            return (ulong)dateTime.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
         }
 
         private Mock<ITimeProvider> timeProviderMock;
