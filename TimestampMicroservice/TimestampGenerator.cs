@@ -4,6 +4,11 @@
 
     public sealed class TimestampGenerator
     {
+        static public ulong GetUnixTimestampFromDate(DateTime dateTime)
+        {
+            return (ulong)dateTime.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+        }
+
         public TimestampGenerator(ITimeProvider timeProvider)
         {
             _timeProvider = timeProvider;
@@ -39,11 +44,6 @@
         private Timestamp GenerateTimestampFromDate(DateTime date)
         {
             return new Timestamp(GetUnixTimestampFromDate(date), GetDateAsString(date));
-        }
-
-        private ulong GetUnixTimestampFromDate(DateTime dateTime)
-        {
-            return (ulong)dateTime.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
         }
 
         private string GetDateAsString(DateTime date)
