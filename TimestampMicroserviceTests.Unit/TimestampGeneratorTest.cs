@@ -58,7 +58,7 @@ namespace TimestampMicroserviceTests
         public void TryGenerateTimestampFromDateString_ReturnsAUtcTimestampWithAValidFormat()
         {
             const string dateString = "2015-12-25";
-            
+
             generator.TryGenerateTimestampFromDateString(dateString, out Timestamp? timestamp);
 
             AssertThatTimestampHasAValidUtcDateString(timestamp);
