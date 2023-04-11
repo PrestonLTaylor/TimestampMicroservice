@@ -34,62 +34,55 @@ namespace TimestampMicroserviceTests
         }
 
         [Test]
-        public void TryGenerateTimestampFromString_ReturnsAUtcTimestampWithAValidFormat_WhenSuppliedAUnixTimestamp()
+        public void GenerateTimestampFromUnixTimestamp_ReturnsAUtcTimestampWithAValidFormat()
         {
             ulong unixTimestamp = TimestampGenerator.GetUnixTimestampFromDate(new DateTime(2015, 12, 25));
 
-            generator.TryGenerateTimestampFromString(unixTimestamp.ToString(), out Timestamp? timestamp);
+            var timestamp = generator.GenerateTimestampFromUnixTimestamp(unixTimestamp);
 
             AssertThatTimestampHasAValidUtcDateString(timestamp);
         }
 
         [Test]
-        public void TryGenerateTimestampFromString_ReturnsAUtcTimestampWithAValidFormat_WhenSuppliedADateString()
-        {
-            const string dateString = "2015-12-25";
-            generator.TryGenerateTimestampFromString(dateString, out Timestamp? timestamp);
-
-            AssertThatTimestampHasAValidUtcDateString(timestamp);
-        }
-
-        [Test]
-        public void TryGenerateTimestampFromString_Fails_WhenSuppliedAnInvalidUnixTimestamp()
-        {
-            const string dateString = "-123456789";
-            var couldGenerate = generator.TryGenerateTimestampFromString(dateString, out Timestamp? _);
-
-            Assert.That(couldGenerate, Is.False);
-        }
-
-        [Test]
-        public void TryGenerateTimestampFromString_Fails_WhenSuppliedAnInvalidDateString()
-        {
-            const string dateString = "2015-15-34";
-            var couldGenerate = generator.TryGenerateTimestampFromString(dateString, out Timestamp? _);
-
-            Assert.That(couldGenerate, Is.False);
-        }
-
-        [Test]
-        public void TryGenerateTimestampFromString_ReturnsTheSameTimeAsSuppliedUnixTimestamp()
+        public void GenerateTimestampFromUnixTimestamp_ReturnsTheSameTimeAsSuppliedUnixTimestamp()
         {
             DateTime dateTime = new(2015, 12, 25);
             ulong unixTimestamp = TimestampGenerator.GetUnixTimestampFromDate(dateTime);
 
-            generator.TryGenerateTimestampFromString(unixTimestamp.ToString(), out Timestamp? timestamp);
+            var timestamp = generator.GenerateTimestampFromUnixTimestamp(unixTimestamp);
 
             AssertThatTimestampEqualsDateTime(timestamp, dateTime);
         }
 
         [Test]
-        public void TryGenerateTimestampFromString_ReturnsTheSameTimeAsSuppliedDateString()
+        public void TryGenerateTimestampFromDateString_ReturnsAUtcTimestampWithAValidFormat()
+        {
+            const string dateString = "2015-12-25";
+            
+            generator.TryGenerateTimestampFromDateString(dateString, out Timestamp? timestamp);
+
+            AssertThatTimestampHasAValidUtcDateString(timestamp);
+        }
+
+        [Test]
+        public void TryGenerateTimestampFromDateString_ReturnsTheSameTimeAsSuppliedDateString()
         {
             const string dateString = "2015-12-25";
             DateTime dateTime = new(2015, 12, 25);
 
-            generator.TryGenerateTimestampFromString(dateString, out Timestamp? timestamp);
+            generator.TryGenerateTimestampFromDateString(dateString, out Timestamp? timestamp);
 
             AssertThatTimestampEqualsDateTime(timestamp, dateTime);
+        }
+
+        [Test]
+        public void TryGenerateTimestampFromDateString_Fails_WhenSuppliedAnInvalidDateString()
+        {
+            const string dateString = "2015-15-34";
+
+            var couldGenerate = generator.TryGenerateTimestampFromDateString(dateString, out Timestamp? _);
+
+            Assert.That(couldGenerate, Is.False);
         }
 
         private void AssertThatTimestampEqualsDateTime(Timestamp? timestamp, DateTime dateTime)

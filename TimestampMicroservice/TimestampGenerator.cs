@@ -19,14 +19,14 @@
             return GenerateTimestampFromDate(_timeProvider.UtcNow);
         }
 
-        public bool TryGenerateTimestampFromString(string dateString, out Timestamp? timestamp)
+        public Timestamp GenerateTimestampFromUnixTimestamp(ulong unixTimestamp)
         {
-            if (ulong.TryParse(dateString, out ulong unixTimestamp))
-            {
-                timestamp = GenerateTimestampFromUnixTimestamp(unixTimestamp);
-                return true;
-            }
-            else if (DateTime.TryParse(dateString, out DateTime date))
+            return GenerateTimestampFromDate(DateTime.UnixEpoch.AddMilliseconds(unixTimestamp));
+        }
+
+        public bool TryGenerateTimestampFromDateString(string dateString, out Timestamp? timestamp)
+        {
+            if (DateTime.TryParse(dateString, out DateTime date))
             {
                 timestamp = GenerateTimestampFromDate(date);
                 return true;
@@ -34,11 +34,6 @@
 
             timestamp = null;
             return false;
-        }
-
-        private Timestamp GenerateTimestampFromUnixTimestamp(ulong unixTimestamp)
-        {
-            return GenerateTimestampFromDate(DateTime.UnixEpoch.AddMilliseconds(unixTimestamp));
         }
 
         private Timestamp GenerateTimestampFromDate(DateTime date)
