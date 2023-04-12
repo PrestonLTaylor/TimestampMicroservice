@@ -4,8 +4,13 @@
     {
         static public WebApplication MapTimestampService(this WebApplication app)
         {
-            app.MapGet("/api/", (TimestampGenerator generator) => Results.Ok(generator.GenerateCurrentTimestamp())).WithOpenApi();
-            app.MapGet("/api/{unixTimestamp:long:min(0)}", (TimestampGenerator generator, ulong unixTimestamp) => Results.Ok(generator.GenerateTimestampFromUnixTimestamp(unixTimestamp)));
+            app.MapGet("/api/", (TimestampGenerator generator) => Results.Ok(generator.GenerateCurrentTimestamp()))
+                .WithDescriptor("/api");
+
+            app.MapGet("/api/{unixTimestamp:long:min(0)}", (TimestampGenerator generator, ulong unixTimestamp) => 
+                Results.Ok(generator.GenerateTimestampFromUnixTimestamp(unixTimestamp)))
+                .WithDescriptor("/api/{unixTimestamp}");
+
             app.MapGet("/api/{dateString}", (TimestampGenerator generator, string dateString) =>
             {
                 if (generator.TryGenerateTimestampFromDateString(dateString, out Timestamp? timestamp))
@@ -14,7 +19,8 @@
                 }
 
                 return Results.BadRequest("Invalid Date");
-            }).WithOpenApi();
+            })
+                .WithDescriptor("/api/{dateString}");
 
             return app;
         }
@@ -27,4 +33,5 @@
             return services;
         }
     }
+
 }

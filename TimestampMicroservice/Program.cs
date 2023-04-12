@@ -1,4 +1,5 @@
 using Serilog;
+using TimestampMicroservice;
 using TimestampMicroservice.Endpoints;
 using TimestampMicroservice.Middleware;
 
@@ -15,6 +16,8 @@ builder.Host.UseSerilog((context, config) =>
 });
 
 var app = builder.Build();
+
+ApiDescriptorExtensions.Configure(app.Services.GetRequiredService<IConfiguration>(), app.Services.GetRequiredService<ILogger<ApiDescriptor>>());
 
 if (app.Environment.IsDevelopment())
 {
